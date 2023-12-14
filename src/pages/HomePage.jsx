@@ -1,8 +1,9 @@
 import styles from './HomePage.module.css';
-
+import Navigation from '../components/Navigation';
 function HomePage() {
   return (
     <main className={styles.homepage}>
+      <Navigation />
       <section>
         <h1>
           You travel the world.

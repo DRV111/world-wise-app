@@ -1,7 +1,9 @@
+import Navigation from '../components/Navigation';
 import styles from './Product.module.css';
 function Pricing() {
   return (
     <main className={styles.product}>
+      <Navigation />
       <section>
         <div>
           <h2>
