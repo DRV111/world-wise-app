@@ -1,5 +1,6 @@
 import styles from './HomePage.module.css';
 import Navigation from '../components/Navigation';
+import { Link } from 'react-router-dom';
 function HomePage() {
   return (
     <main className={styles.homepage}>
@@ -15,6 +16,9 @@ function HomePage() {
           of. Never forget your wonderful experiences, and show your friends how
           you have wandered the world.
         </h2>
+        <Link to="/login" className="cta">
+          Start tracking now
+        </Link>
       </section>
     </main>
   );
