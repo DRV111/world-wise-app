@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useURLPosition } from '../hooks/useURLPosition';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import styles from './Form.module.css';
 import Button from './Button';
@@ -29,6 +31,7 @@ function Form() {
 
   useEffect(
     function () {
+      if (!lat && !lng) return;
       async function fetchCityData() {
         try {
           setIsLoadingGeocoing(true);
@@ -55,10 +58,16 @@ function Form() {
   );
   if (isLoadingGeocoing) return <Spinner />;
 
+  if (!lat && !lng) return <Message message="Start by clicking on the map" />;
+
   if (geocodingError) return <Message message={geocodingError} />;
 
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
@@ -71,10 +80,11 @@ function Form() {
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        <input
+        <DatePicker
           id="date"
-          onChange={(e) => setDate(e.target.value)}
-          value={date}
+          selected={date}
+          onChange={(date) => setDate(date)}
+          dateFormat="dd/MM/yyyy"
         />
       </div>
 
