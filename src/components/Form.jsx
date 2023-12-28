@@ -4,6 +4,8 @@ import { useURLPosition } from '../hooks/useURLPosition';
 import styles from './Form.module.css';
 import Button from './Button';
 import BackButton from './BackButton';
+import Message from './Message';
+import Spinner from './Spinner';
 
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
@@ -20,23 +22,29 @@ function Form() {
   const [country, setCountry] = useState('');
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState('');
+  const [geocodingError, setGeocodingError] = useState('');
 
   const BASE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
+  const [emoji, setEmoji] = useState('');
 
   useEffect(
     function () {
       async function fetchCityData() {
         try {
           setIsLoadingGeocoing(true);
+          setGeocodingError('');
           const res = await fetch(
             `${BASE_URL}?latitude=${lat}&longitude=${lng}`
           );
           const data = await res.json();
           console.log(data);
+          if (!data.countryCode)
+            throw new Error('Please provide a valid location');
           setCityName(data.city || data.locality || '');
           setCountry(data.countryCode);
+          setEmoji(convertToEmoji(data.countryCode));
         } catch (err) {
-          console.log(err);
+          setGeocodingError(err.message);
         } finally {
           setIsLoadingGeocoing(false);
         }
@@ -45,6 +53,9 @@ function Form() {
     },
     [lat, lng]
   );
+  if (isLoadingGeocoing) return <Spinner />;
+
+  if (geocodingError) return <Message message={geocodingError} />;
 
   return (
     <form className={styles.form}>
@@ -55,7 +66,7 @@ function Form() {
           onChange={(e) => setCityName(e.target.value)}
           value={cityName}
         />
-        {/* <span className={styles.flag}>{emoji}</span> */}
+        <span className={styles.flag}>{emoji}</span>
       </div>
 
       <div className={styles.row}>
