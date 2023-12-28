@@ -64,6 +64,19 @@ function Form() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (!cityName || !date) return;
+    const newCity = {
+      cityName,
+      country,
+      emoji,
+      date,
+      notes,
+      position: {
+        lat,
+        lng,
+      },
+    };
+    console.log(newCity);
   }
 
   return (
